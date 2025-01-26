@@ -7,9 +7,7 @@ import { User } from '../Modules/User/User.model';
 
 const authGurd = (...roles: string[]) => {
   return catchAsync(async (req, res, next) => {
-    console.log(roles);
     const token = req.headers?.authorization;
-    // console.log(token);
     if (!token) {
       throw new CustomError(httpStatus.UNAUTHORIZED, 'Unauthorized');
     }
@@ -18,10 +16,10 @@ const authGurd = (...roles: string[]) => {
       Config.jwt_secret_key as string,
     ) as JwtPayload;
     const { email, iat, role } = decodedData;
+    req.user = decodedData;
     const existUser = await User.findOne({
       email,
     });
-    console.log(decodedData);
     if (!existUser) {
       throw new CustomError(httpStatus.NOT_FOUND, 'User not found');
     }
@@ -32,14 +30,10 @@ const authGurd = (...roles: string[]) => {
 
       const checkJwtIssuedBeforeLastPasswordChange = passwordChangeAt > iat;
       if (checkJwtIssuedBeforeLastPasswordChange) {
-        console.log(
-          'checkJwtIssuedBeforeLastPasswordChange',
-          checkJwtIssuedBeforeLastPasswordChange,
-        );
         throw new CustomError(httpStatus.UNAUTHORIZED, 'Unauthorized');
       }
     }
-    console.log('roles', roles, 'role', role);
+    // console.log('roles', roles, 'role', role);
     if (roles.length && !roles.includes(role)) {
       throw new CustomError(httpStatus.UNAUTHORIZED, 'Unauthorized');
     }
