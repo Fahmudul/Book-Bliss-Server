@@ -3,3 +3,10 @@ export type TRegister = {
   email: string;
   password: string;
 };
+
+export type JWTdecodedData = {
+  email: string;
+  iat: number;
+  role: string;
+  exp: number;
+};
