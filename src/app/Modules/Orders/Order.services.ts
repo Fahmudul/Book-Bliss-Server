@@ -46,7 +46,7 @@ const createOrder = async (
   };
 
   const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
-  console.log("payment info", payment)
+  console.log('payment info', payment);
   if (payment?.transactionStatus) {
     order = await order.updateOne({
       transaction: {
@@ -60,7 +60,7 @@ const createOrder = async (
 };
 
 const getOrders = async () => {
-  const data = await Order.find();
+  const data = await Order.find().populate("user");
   return data;
 };
 
@@ -94,8 +94,13 @@ const verifyPayment = async (order_id: string) => {
   return verifiedPayment;
 };
 
+const changeOrderStatus = async (id: string, status: string) => {
+  const result = await Order.findByIdAndUpdate(id, { status });
+  return result;
+};
 export const orderService = {
   createOrder,
   getOrders,
   verifyPayment,
+  changeOrderStatus,
 };

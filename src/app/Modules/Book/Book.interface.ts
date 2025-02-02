@@ -14,4 +14,5 @@ export interface IBook {
   quantity: number;
   price: number;
   inStock: boolean;
+  isDeleted: boolean;
 }

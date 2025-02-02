@@ -12,4 +12,5 @@ export interface IUser {
   city?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  activity: 'activated' | 'deactivated';
 }

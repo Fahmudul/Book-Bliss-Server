@@ -39,4 +39,23 @@ const verifyPayment = catchAsync(async (req, res) => {
   });
 });
 
-export const orderController = { createOrder, verifyPayment, getOrders };
+const changeOrderStatus = catchAsync(async (req, res) => {
+  const order = await orderService.changeOrderStatus(
+    req.params.id,
+    req.query.status as string,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: 'Order status changed successfully',
+    data: order,
+  });
+});
+
+export const orderController = {
+  createOrder,
+  verifyPayment,
+  getOrders,
+  changeOrderStatus,
+};

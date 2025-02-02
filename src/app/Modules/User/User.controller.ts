@@ -35,7 +35,28 @@ const RetriveUsers = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const deactivateUser = catchAsync(async (req, res) => {
+  const result = await UserServices.deactivateUser(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User deactivated successfully',
+    data: result,
+  });
+});
+const activateUser = catchAsync(async (req, res) => {
+  const result = await UserServices.activateUser(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User activated successfully',
+    data: result,
+  });
+});
 export const UserControllers = {
   createNewUser,
   RetriveUsers,
+  deactivateUser,
+  activateUser,
 };
