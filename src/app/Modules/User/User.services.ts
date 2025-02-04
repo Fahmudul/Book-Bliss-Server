@@ -1,5 +1,6 @@
 import { TRegister } from '../../types/global';
 import { User } from './User.model';
+
 const RegisterUserIntoDb = async ({ name, email, password }: TRegister) => {
   // console.log('coming');
   // console.log('hashed password', password);
@@ -25,6 +26,7 @@ const deactivateUser = async (id: string) => {
   const result = await User.findByIdAndUpdate(id, { activity: 'deactivated' });
   return result;
 };
+
 export const UserServices = {
   RegisterUserIntoDb,
   RetriveAllUserFromDB,

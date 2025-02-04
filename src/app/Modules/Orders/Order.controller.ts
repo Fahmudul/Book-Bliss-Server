@@ -2,13 +2,16 @@ import catchAsync from '../../Utils/catchAsync';
 import sendResponse from '../../Utils/sendResponse';
 import httpStatus from 'http-status';
 import { orderService } from './Order.services';
+import { IUser } from '../User/User.interface';
 
 const createOrder = catchAsync(async (req, res) => {
   const user = req.user;
 
-  console.log(req.body);
-  const order = await orderService.createOrder(user, req.body, req.ip!);
-  console.log('from controller', order);
+  const order = await orderService.createOrder(
+    user as IUser,
+    req.body,
+    req.ip!,
+  );
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -53,9 +56,20 @@ const changeOrderStatus = catchAsync(async (req, res) => {
   });
 });
 
+const getCustomerOrder = catchAsync(async (req, res) => {
+  const { email } = req.user;
+  const order = await orderService.getCustomerOrdersFromDb(email);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: 'Order retrieved successfully',
+    data: order,
+  });
+});
 export const orderController = {
   createOrder,
   verifyPayment,
   getOrders,
   changeOrderStatus,
+  getCustomerOrder,
 };

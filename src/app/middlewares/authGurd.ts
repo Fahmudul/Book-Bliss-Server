@@ -16,7 +16,6 @@ const authGurd = (...roles: string[]) => {
       Config.jwt_secret_key as string,
     ) as JwtPayload;
     const { email, iat, role } = decodedData;
-    console.log(decodedData)
     req.user = decodedData;
     const existUser = await User.findOne({
       email,

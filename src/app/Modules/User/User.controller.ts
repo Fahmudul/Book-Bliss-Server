@@ -54,9 +54,13 @@ const activateUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+
+
 export const UserControllers = {
   createNewUser,
   RetriveUsers,
   deactivateUser,
   activateUser,
+  
 };

@@ -61,6 +61,16 @@ const UpdateBook = catchAsync(async (req, res) => {
   });
 });
 
+const GetAuthors = catchAsync(async (req, res) => {
+  const result = await BookServices.GetAuthorsFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Book retrieved successfully',
+    data: result,
+  });
+});
+
 export const BookController = {
   CreateBook,
   RetriveBooks,
@@ -68,4 +78,5 @@ export const BookController = {
   NumberOfCategory,
   DeleteBook,
   UpdateBook,
+  GetAuthors,
 };

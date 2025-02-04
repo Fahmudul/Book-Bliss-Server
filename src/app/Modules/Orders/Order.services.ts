@@ -5,12 +5,14 @@ import { orderUtils } from './Order.utils';
 import BookModel from '../Book/Book.model';
 import { IUser } from '../User/User.interface';
 import { Types } from 'mongoose';
+import { User } from '../User/User.model';
 
 const createOrder = async (
   user: IUser,
   payload: { products: { productId: Types.ObjectId; quantity: number }[] },
   client_ip: string,
 ) => {
+  console.log('product array', payload);
   if (!payload?.products?.length)
     throw new CustomError(httpStatus.NOT_ACCEPTABLE, 'Order is not specified');
 
@@ -20,6 +22,7 @@ const createOrder = async (
   const productDetails = await Promise.all(
     products.map(async (item) => {
       const product = await BookModel.findById(item.productId);
+      console.log('from line 24', product);
       if (product) {
         const subtotal = product ? (product.price || 0) * item.quantity : 0;
         totalPrice += subtotal;
@@ -60,7 +63,7 @@ const createOrder = async (
 };
 
 const getOrders = async () => {
-  const data = await Order.find().populate("user");
+  const data = await Order.find().populate('user');
   return data;
 };
 
@@ -98,9 +101,18 @@ const changeOrderStatus = async (id: string, status: string) => {
   const result = await Order.findByIdAndUpdate(id, { status });
   return result;
 };
+const getCustomerOrdersFromDb = async (email: string) => {
+  const id = await User.findOne({ email }).select('_id');
+  console.log(id);
+  const result = await Order.find({ user: id }).populate('user');
+  console.log(result);
+  return result;
+};
+
 export const orderService = {
   createOrder,
   getOrders,
   verifyPayment,
   changeOrderStatus,
+  getCustomerOrdersFromDb,
 };

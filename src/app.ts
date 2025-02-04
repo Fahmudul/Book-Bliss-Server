@@ -8,15 +8,16 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://book-bliss-alpha.vercel.app'],
     credentials: true,
   }),
 );
 
 app.use('/api/v1', router);
-// app.get('/test', async (req, res) => {
-//   res.send('test route');
-// });
+
+app.get('/', (req, res) => {
+  res.send('Welcome from Book Bliss');
+});
 
 app.use(globalErrorHandler);
 

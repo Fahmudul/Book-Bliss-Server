@@ -7,15 +7,13 @@ const CreateBookInDB = async (payload: IBook) => {
   return result;
 };
 const RetriveAllBookFromDB = async (query: Record<string, unknown>) => {
-  console.log('from line 10', query);
   const AllBookQuery = new QueryBuilder(BookModel.find(), query)
     .search(['author', 'category', 'title'])
-    .filter();
+    .filter()
+    .limit();
 
   const documentCount = await AllBookQuery.countTotal();
   const result = await AllBookQuery.modelQuery;
-  console.log('from all book', result);
-  console.log('documentCount', documentCount);
   return result;
 };
 
@@ -45,7 +43,13 @@ const UpdateBookDataInDB = async (_id: string, payload: Partial<IBook>) => {
     new: true,
     runValidators: true,
   });
-  console.log('book Deleted', result);
+  return result;
+};
+
+const GetAuthorsFromDB = async () => {
+  const result = await BookModel.aggregate([
+    { $group: { _id: '$author', count: { $sum: 1 } } },
+  ]);
   return result;
 };
 export const BookServices = {
@@ -55,4 +59,5 @@ export const BookServices = {
   NumberOfCategory,
   DeleteBookFromDB,
   UpdateBookDataInDB,
+  GetAuthorsFromDB,
 };
